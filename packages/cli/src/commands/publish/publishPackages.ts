@@ -3,7 +3,7 @@ import semverParse from "semver/functions/parse";
 import pc from "picocolors";
 import { AccessType } from "@changesets/types";
 import { Package } from "@manypkg/get-packages";
-import { info, warn } from "@changesets/logger";
+import { error, info, warn } from "@changesets/logger";
 import { PreState } from "@changesets/types";
 import * as npmUtils from "./npm-utils";
 import { TwoFactorState } from "../../utils/types";
@@ -93,7 +93,7 @@ export default async function publishPackages({
     preState
   );
 
-  info('!!! unpublishedPackagesInfo.length', unpublishedPackagesInfo.length);
+  error('!!! unpublishedPackagesInfo.length', unpublishedPackagesInfo.length);
 
   if (unpublishedPackagesInfo.length === 0) {
     return [];
@@ -152,7 +152,7 @@ async function getUnpublishedPackages(
 ) {
   const results: Array<PkgInfo> = await Promise.all(
     packages.map(async ({ packageJson }) => {
-      info('!!! Getting info for package', packageJson.name);
+      error('!!! Getting info for package', packageJson.name);
       const response = await npmUtils.infoAllow404(packageJson);
       let publishedState: PublishedState = "never";
       if (response.published) {
@@ -176,8 +176,8 @@ async function getUnpublishedPackages(
         publishedState,
         publishedVersions: response.pkgInfo.versions || [],
       };
-      
-      info('!!! Got info for package', infoResult);
+
+      error('!!! Got info for package', infoResult);
       return infoResult;
     })
   );

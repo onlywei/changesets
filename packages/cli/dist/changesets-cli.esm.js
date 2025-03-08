@@ -885,7 +885,7 @@ async function publishPackages({
   const packagesByName = new Map(packages.map(x => [x.packageJson.name, x]));
   const publicPackages = packages.filter(pkg => !pkg.packageJson.private);
   const unpublishedPackagesInfo = await getUnpublishedPackages(publicPackages, preState);
-  info('!!! unpublishedPackagesInfo.length', unpublishedPackagesInfo.length);
+  error('!!! unpublishedPackagesInfo.length', unpublishedPackagesInfo.length);
 
   if (unpublishedPackagesInfo.length === 0) {
     return [];
@@ -925,7 +925,7 @@ async function getUnpublishedPackages(packages, preState) {
   const results = await Promise.all(packages.map(async ({
     packageJson
   }) => {
-    info('!!! Getting info for package', packageJson.name);
+    error('!!! Getting info for package', packageJson.name);
     const response = await infoAllow404(packageJson);
     let publishedState = "never";
 
@@ -945,7 +945,7 @@ async function getUnpublishedPackages(packages, preState) {
       publishedState,
       publishedVersions: response.pkgInfo.versions || []
     };
-    info('!!! Got info for package', infoResult);
+    error('!!! Got info for package', infoResult);
     return infoResult;
   }));
   const packagesToPublish = [];
