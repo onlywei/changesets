@@ -86,10 +86,6 @@ export default async function publishPackages({
   preState: PreState | undefined;
   tag?: string;
 }) {
-  console.error("CONSOLE METHODS:", 
-    Object.getOwnPropertyDescriptor(console, 'log'),
-    Object.getOwnPropertyDescriptor(console, 'info'));
-
   const packagesByName = new Map(packages.map((x) => [x.packageJson.name, x]));
   const publicPackages = packages.filter((pkg) => !pkg.packageJson.private);
   const unpublishedPackagesInfo = await getUnpublishedPackages(
@@ -97,7 +93,7 @@ export default async function publishPackages({
     preState
   );
 
-  info('!!! unpublishedPackagesInfo.length', unpublishedPackagesInfo.length);
+  console.warn('!!! unpublishedPackagesInfo.length', unpublishedPackagesInfo.length);
 
   if (unpublishedPackagesInfo.length === 0) {
     return [];
@@ -156,7 +152,7 @@ async function getUnpublishedPackages(
 ) {
   const results: Array<PkgInfo> = await Promise.all(
     packages.map(async ({ packageJson }) => {
-      info('!!! Getting info for package', packageJson.name);
+      console.warn('!!! Getting info for package', packageJson.name);
       const response = await npmUtils.infoAllow404(packageJson);
       let publishedState: PublishedState = "never";
       if (response.published) {
@@ -181,7 +177,7 @@ async function getUnpublishedPackages(
         publishedVersions: response.pkgInfo.versions || [],
       };
 
-      info('!!! Got info for package', infoResult);
+      console.warn('!!! Got info for package', infoResult);
       return infoResult;
     })
   );
