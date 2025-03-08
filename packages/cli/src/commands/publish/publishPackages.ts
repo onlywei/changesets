@@ -93,6 +93,8 @@ export default async function publishPackages({
     preState
   );
 
+  console.log('!!! unpublishedPackagesInfo.length', unpublishedPackagesInfo.length);
+
   if (unpublishedPackagesInfo.length === 0) {
     return [];
   }
@@ -150,6 +152,7 @@ async function getUnpublishedPackages(
 ) {
   const results: Array<PkgInfo> = await Promise.all(
     packages.map(async ({ packageJson }) => {
+      console.debug('!!! Getting info for package', packageJson.name);
       const response = await npmUtils.infoAllow404(packageJson);
       let publishedState: PublishedState = "never";
       if (response.published) {
@@ -167,12 +170,15 @@ async function getUnpublishedPackages(
         }
       }
 
-      return {
+      const info = {
         name: packageJson.name,
         localVersion: packageJson.version,
         publishedState,
         publishedVersions: response.pkgInfo.versions || [],
       };
+      
+      console.debug('!!! Got info for package', info);
+      return info;
     })
   );
 
