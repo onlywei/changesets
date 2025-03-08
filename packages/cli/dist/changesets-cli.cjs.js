@@ -920,6 +920,7 @@ async function publishPackages({
   preState,
   tag
 }) {
+  console.error("CONSOLE METHODS:", Object.getOwnPropertyDescriptor(console, 'log'), Object.getOwnPropertyDescriptor(console, 'info'));
   const packagesByName = new Map(packages.map(x => [x.packageJson.name, x]));
   const publicPackages = packages.filter(pkg => !pkg.packageJson.private);
   const unpublishedPackagesInfo = await getUnpublishedPackages(publicPackages, preState);
